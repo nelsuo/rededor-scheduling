@@ -1,0 +1,19 @@
+{
+    "name": "rededor/scheduling",
+    "description": "An sdk to interact with Rede D'or scheduling API",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Rededor\\Scheduling\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Nelson Teixeira"
+        }
+    ],
+    "require": {
+        "laminas/laminas-http": "^2.15"
+    }
+}
