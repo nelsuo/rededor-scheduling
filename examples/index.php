@@ -91,21 +91,21 @@ $sdk->authenticate(
 
 ####################################################################################
 
-// $date = new DateTime();
-// $date->add(new DateInterval('P3D'));
-// $initialDate = $date->format('Y-m-d') . 'T00:00:00-03:00';
-// $date->add(new DateInterval('P10D'));
-// $finalDate = $date->format('Y-m-d') . 'T00:00:00-03:00';
+$date = new DateTime();
+$date->add(new DateInterval('P3D'));
+$initialDate = $date->format('Y-m-d') . 'T00:00:00-03:00';
+$date->add(new DateInterval('P10D'));
+$finalDate = $date->format('Y-m-d') . 'T00:00:00-03:00';
 
-// $results = $sdk->slots->get([
-// 	'initialDate' => $initialDate, 
-// 	'finalDate' => $finalDate,
-// 	'locationId' => '51',
-// 	'specialtyIds' => [20],
-// 	//'professionalId',
-// 	'healthPlanId' => 165943898,
+$results = $sdk->slots->get([
+	'initialDate' => $initialDate, 
+	'finalDate' => $finalDate,
+	'locationId' => '51',
+	'specialtyIds' => [20],
+	//'professionalId',
+	'healthPlanId' => 165943898,
 	
-// ]);
+]);
 
 // print_r($results[0]);
 // var_dump(count($results));
