@@ -4,13 +4,27 @@ namespace Rededor\Scheduling\Modules;
 
 class Auth extends Generic
 {
-  
+  	
+	protected $config = [
+		'route' => 'oauth/access-token',
+		'methods' => [
+			'post' => [
+				'parameters' => [
+					'grant_type:required'
+				]
+			]
+		]
+	];
+
     /**
      * Requests a new access token based on the credentials
+     *
+     * @param      <type>  $credentials  The credentials (id, secret)
+     *
+     * @return     <type>  The server response.
      */
     public function login($credentials) {
-        $response = $this->_post(
-        	'/oauth/access-token', 
+        $response = $this->post(
         	[
         		'grant_type' => 'client_credentials'
         	],

@@ -1,16 +1,17 @@
 <?php 
 namespace Rededor\Scheduling\Modules;
 
-class Specialities extends Generic
+class HealthPlans extends Generic
 {
 	protected $config = [
-		'route' => 'specialities',
+		'route' => 'health-plans',
 		'methods' => [
 			'get' => [
 				'parameters' => [
 					'page', 
 					'pageSize', 
-					'description'
+					'healthPlan', 
+					'healthInsurance'
 				]
 			]
 		]

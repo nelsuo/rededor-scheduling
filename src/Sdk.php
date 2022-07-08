@@ -22,6 +22,14 @@ class Sdk {
     private $modules = [];
     static private $modulesAvailable = [
         'specialities',
+        'locations',
+        'healthInsurances',
+        'healthPlans',
+        'professionals',
+        'prices',
+        'slots',
+        'scheduling',
+        'settings',
     ];
 
 	public function __construct($version, $env) {
@@ -60,9 +68,9 @@ class Sdk {
             throw new \Exception('Module ' . $name . ' does not exist.');
         }
 
-        if (empty($this->accessToken)) {
-        	throw new \Exception('Must authenticate first.');	
-        }
+        // if (empty($this->accessToken)) {
+        // 	throw new \Exception('Must authenticate first.');	
+        // }
 
         if (empty($this->modules[$name])) {
             $class = '\\Rededor\\Scheduling\\Modules\\' . ucfirst($name);
