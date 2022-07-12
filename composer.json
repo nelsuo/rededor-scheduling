@@ -5,7 +5,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Rededor\\Scheduling\\": "src/"
+            "Rededor\\Scheduling\\": "src/",
             "Rededor\\Scheduling\\Modules\\": "src/modules"
         }
     },
