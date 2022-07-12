@@ -8,7 +8,10 @@ class Sdk {
 	private $env = null;
 
 	private $clientId = null;
+    private $clientSecret = null;
 	private $accessToken = null;
+    private $tokenSaveMethod = null;
+    private $tokenLoadMethod = null;
 
 	private static $envConfigs = [
 		'dev' => [
@@ -38,18 +41,67 @@ class Sdk {
 		$this->config = static::$envConfigs[$env];
 	}
 
-	public function authenticate($clientId, $clientSecret) {
+    public function getAccessToken() {
+        return $this->accessToken;
+    }
+
+    public function setClientId($clientId) {
+        $this->clientId = $clientId;
+
+        return $this;
+    }
+
+    public function getClientId() {
+        return $this->clientId;
+    }
+
+    public function setTokenSaveMethod($fn) {
+        $this->tokenSaveMethod = $fn;
+
+        return $this;
+    }
+
+    public function setTokenLoadMethod($fn) {
+        $this->tokenLoadMethod = $fn;
+
+        return $this;
+    }
+
+    public function recoverToken() {
+        $this->authenticate();
+    }
+
+    public function setClientSecret($clientSecret) {
+        $this->clientSecret = $clientSecret;
+
+        return $this;
+    }
+
+    public function setAccessToken($accessToken) {
+        $this->accessToken = $accessToken;
+
+        return $this;
+    }
+
+	public function authenticate($clientId = null, $clientSecret = null) {
         
+        if ($clientId !== null) {
+            $this->clientId = $clientId;
+        }  
+
+        if ($clientSecret !== null) {
+            $this->clientSecret = $clientSecret;
+        }
+
         $auth = new \Rededor\Scheduling\Modules\Auth(
+            $this,
         	$this->config['endpoints']['auth']
         );
 
-        $this->clientId = $clientId;
-
         $response = $auth->login(
         	[
-        		'id' => $clientId,
-        		'secret' => $clientSecret
+        		'id' => $this->clientId,
+        		'secret' => $this->clientSecret
         	]
         );
 
@@ -58,6 +110,12 @@ class Sdk {
         }
 
         $this->accessToken = $response['access_token'];
+
+        if (!empty($this->tokenSaveMethod)) {
+            $fn = $this->tokenSaveMethod;
+            $fn($this->accessToken);    
+        }
+        
 
         return $this;
     }
@@ -68,17 +126,36 @@ class Sdk {
             throw new \Exception('Module ' . $name . ' does not exist.');
         }
 
-        // if (empty($this->accessToken)) {
-        // 	throw new \Exception('Must authenticate first.');	
-        // }
+        if (empty($this->clientId)) {
+            throw new \Exception('Client Id must be set.');  
+        }
+
+        if (empty($this->accessToken)) {
+            if (empty($this->tokenLoadMethod)) {
+                throw new \Exception('Access Token must be set.');      
+            }
+        	$fn = $this->tokenLoadMethod;
+            $accessToken = $fn();    
+
+            if (!empty($accessToken)) {
+                $this->accessToken = $accessToken;
+            } else {
+                if (empty($this->clientSecret)) {
+                    throw new \Exception('Client Secret must be set.');  
+                }
+
+                $this->authenticate();
+            }
+        }
+
+
 
         if (empty($this->modules[$name])) {
             $class = '\\Rededor\\Scheduling\\Modules\\' . ucfirst($name);
 
             $this->modules[$name] = new $class(
-            	$this->config['endpoints']['api'] . '/' . $this->version, 
-            	$this->clientId,
-            	$this->accessToken
+                $this,
+            	$this->config['endpoints']['api'] . '/' . $this->version            	
             );
         }
 

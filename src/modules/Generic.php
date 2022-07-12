@@ -13,33 +13,20 @@ abstract class Generic {
 	const METHOD_GET = 'get';
     const METHOD_POST = 'post';
 
+    protected $sdk = null;
     protected $name = null;
 	protected $endpoint = null;	
-	protected $clientId = null;
-	protected $accessToken = null;
 	
 	/**
 	 * Constructs a new instance.
 	 *
+	 * @param      object  $sdk 		 The class the controls the interaction
 	 * @param      string  $endpoint     The endpoint
-	 * @param      string  $clientId     The client identifier
-	 * @param      string  $accessToken  The access token
 	 */
-	function __construct($endpoint, $clientId = null, $accessToken = null) {
+	function __construct($sdk, $endpoint) {
+		$this->sdk = $sdk;
 		$this->endpoint = $endpoint;
-		$this->clientId = $clientId;
-		$this->accessToken = $accessToken;
 	}
-
-	/**
-	 * Sets the access token.
-	 *
-	 * @param      string  $accessToken  The access token
-	 */
-	public function setAccessToken($accessToken) {
-		$this->accessToken = $accessToken;
-	}
-
 
 	/**
 	 * Makes a get request on the module, width the given parameters.
@@ -227,11 +214,11 @@ abstract class Generic {
 			]
 		);
 
-		var_dump($this->endpoint . $url);
-		
-		if (!empty($this->accessToken)) {
-			$headers['client_id'] = $this->clientId;
-			$headers['access_token'] = $this->accessToken;
+		$accessToken = $this->sdk->getAccessToken();
+
+		if (!empty($accessToken)) {
+			$headers['client_id'] = $this->sdk->getClientId();
+			$headers['access_token'] = $accessToken;
 		}
 
 		switch ($method) {
@@ -253,7 +240,27 @@ abstract class Generic {
 
 		$response = $client->send();	
 
-		return $this->parseResponse($response);
+		try {
+			$output = $this->parseResponse($response);	
+		} catch (\Exception $exception) {
+
+			if ($exception->getMessage() === 'INVALID_ACCESS_TOKEN' && empty($options['retrying'])) {
+				
+				$this->sdk->recoverToken();
+
+				$options['retrying'] = true;
+
+				return $this->request($method, $url, $parameters, $options);
+
+			} else {
+				throw $exception;
+			}
+
+
+		}
+		
+
+		return $output;
 	}
 
 
@@ -273,8 +280,14 @@ abstract class Generic {
 		if (!$response->isSuccess()) {
 			$body = json_decode($response->getBody(), true);
 			if (!$body) {
+				$body = $response->getBody();
+				if (strpos($body, 'Could not find a required Access Token in the request') === 0) {
+					throw new \Exception('INVALID_ACCESS_TOKEN');					
+				}
+
 				throw new \Exception($response->getBody());
 			}
+			pr($body);
 			throw new \Exception($body['message']);
 			
 		}

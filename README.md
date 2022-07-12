@@ -1,5 +1,7 @@
 README.
 
+//Já alterei isso, melhorei as mensagens de erro e troquei no nome do parâmetro de specialtyIds[] para specialtyId
+
 ```
 require_once "../vendor/autoload.php";
 
@@ -9,7 +11,7 @@ $sdk->authenticate(
 	'fbe022b5-b20a-4542-b962-d6ad403b36ad',
 	'b78d16a8-781a-411a-8c77-b5f7ff265b7f'
 );
-
+	
 
 ####################################################################################
 
