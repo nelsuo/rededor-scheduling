@@ -287,7 +287,7 @@ abstract class Generic {
 
 				throw new \Exception($response->getBody());
 			}
-			pr($body);
+			
 			throw new \Exception($body['message']);
 			
 		}

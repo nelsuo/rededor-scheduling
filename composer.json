@@ -6,6 +6,7 @@
     "autoload": {
         "psr-4": {
             "Rededor\\Scheduling\\": "src/"
+            "Rededor\\Scheduling\\Modules\\": "src/modules"
         }
     },
     "authors": [

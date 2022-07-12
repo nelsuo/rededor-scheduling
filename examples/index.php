@@ -1,7 +1,8 @@
 <?php
 
+echo get_include_path();
 
-require_once "../vendor/autoload.php";
+require_once "./autoload.php";
 
 $sdk = new Rededor\Scheduling\Sdk('v1', 'dev');
 
@@ -17,15 +18,16 @@ $sdk->authenticate(
 
 ####################################################################################
 
-// $results = $sdk->specialities->get([
-// 	'description' => 'cardi',
-// 	'page' => 1,
-// 	'pageSize' => 10
-// ]);
+$results = $sdk->specialities->get([
+	'description' => 'cardi',
+	'page' => 1,
+	'pageSize' => 10
+]);
 
-// print_r($results['items'][0]);
-// var_dump(count($results['items']));
+print_r($results['items'][0]);
+var_dump(count($results['items']));
 
+die();
 
 ####################################################################################
 
