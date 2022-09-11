@@ -11,7 +11,7 @@ class Slots extends Generic
 					'initialDate:required', 
 					'finalDate:required', 
 					'locationId:required',
-					'specialtyIds:required',
+					'specialtyId:required',
 					'professionalId',
 					'healthPlanId'
 				]

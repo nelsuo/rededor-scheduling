@@ -10,7 +10,7 @@ class Scheduling extends Generic
 				'parameters' => [
 					'specialtyId:required', 
 					'sectorId:required', 
-					'healthPlanId:required',
+					'healthPlanId',
 					'initialDate:required',
 					'finalDate:required',
 					'professionalId',

@@ -56,6 +56,8 @@ abstract class Generic {
      */
     public function post($parameters = [], $options = []) {
 
+    	pr($parameters);
+
     	$response = $this->request(
 			static::METHOD_POST, 
 			'/' . $this->getConfig('route'), 
